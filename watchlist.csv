@@ -1,2 +1,3 @@
-Symbol,Target,Remark
-SHPC,530.0,48 Accumulation and Demand Zone
+Symbol,Target,Remark,Condition,Note
+SHPC,530.0,48 Accumulation and Demand Zone,,
+UPPER,200.0,,Below,Test
