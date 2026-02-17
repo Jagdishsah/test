@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
-from github import Github
+from github import Github, Auth
 from io import StringIO
 import plotly.express as px
 from datetime import datetime
@@ -29,14 +29,19 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # --- GITHUB ENGINE ---
+# --- GITHUB ENGINE ---
 def get_repo():
     try:
         token = st.secrets["github"]["token"]
         repo_name = st.secrets["github"]["repo_name"]
-        g = Github(token)
+        
+        # New Authentication Method
+        auth = Auth.Token(token)
+        g = Github(auth=auth)
+        
         return g.get_user().get_repo(repo_name)
-    except:
-        st.error("GitHub Connection Failed. Check Secrets.")
+    except Exception as e:
+        st.error(f"GitHub Connection Failed: {e}")
         return None
 
 def get_data(filename):
