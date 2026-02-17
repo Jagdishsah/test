@@ -30,19 +30,27 @@ st.markdown("""
 
 # --- GITHUB ENGINE ---
 # --- GITHUB ENGINE ---
+from github import Github, Auth  # Make sure you have this import at the top
+
+# --- GITHUB ENGINE ---
 def get_repo():
     try:
+        # Load secrets
         token = st.secrets["github"]["token"]
         repo_name = st.secrets["github"]["repo_name"]
         
-        # New Authentication Method
+        # New Authentication (Removes the Warning)
         auth = Auth.Token(token)
         g = Github(auth=auth)
         
-        return g.get_user().get_repo(repo_name)
+        # FIX: Use get_repo directly (Handles "User/Repo" format better)
+        return g.get_repo(repo_name)
+        
     except Exception as e:
         st.error(f"GitHub Connection Failed: {e}")
+        st.info(f"Check your secrets.toml. Is the repo name '{st.secrets['github']['repo_name']}' correct? Does it exist on GitHub?")
         return None
+        
 
 def get_data(filename):
     repo = get_repo()
