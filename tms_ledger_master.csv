@@ -1,8 +1,8 @@
 Date,Type,Category,Amount,Status,Due_Date,Ref_ID,Description,Is_Non_Cash,Dispute_Note,Fiscal_Year
-2025-09-01,Load Collateral (Deposit),DEPOSIT,10824,Cleared,2025-09-01,DEP-INIT,Initial Collateral Load (Prabhu),False,,2082/83
+2025-09-01,Load Collateral (Deposit),DEPOSIT,10824.0,Cleared,2025-09-01,DEP-INIT,Initial Collateral Load (Prabhu),False,,2082/83
 2026-02-10,Buy Settlement (Payable),PAYABLE,4372.24,Cleared,2026-02-12,SETTLE-20260210,Net Settlement Buy (Floorsheet),False,,2082/83
-2026-02-09,Sell Settlement (Receivable),RECEIVABLE,2177.67,Pending,2026-02-11,SETTLE-20260209,Net Settlement Sell (Pending Receipt),False,,2082/83
-2026-02-05,Sell Settlement (Receivable),RECEIVABLE,4916.40,Cleared,2026-02-08,SETTLE-20260205,Net Settlement Sell,False,,2082/83
+2026-02-09,Sell Settlement (Receivable),RECEIVABLE,2177.67,Cleared,2026-02-11,SETTLE-20260209,Net Settlement Sell (Pending Receipt),False,,2082/83
+2026-02-05,Sell Settlement (Receivable),RECEIVABLE,4916.4,Cleared,2026-02-08,SETTLE-20260205,Net Settlement Sell,False,,2082/83
 2026-02-04,Buy Settlement (Payable),PAYABLE,5114.01,Cleared,2026-02-06,SETTLE-20260204,Net Settlement Buy,False,,2082/83
 2026-01-29,Buy Settlement (Payable),PAYABLE,9501.25,Cleared,2026-02-02,SETTLE-20260129-B,Net Settlement Buy,False,,2082/83
 2026-01-29,Sell Settlement (Receivable),RECEIVABLE,3820.59,Cleared,2026-02-02,SETTLE-20260129-S,Net Settlement Sell,False,,2082/83
