@@ -1,0 +1,3 @@
+Date,Type,Category,Amount,Status,Due_Date,Ref_ID,Description,Is_Non_Cash,Dispute_Note,Fiscal_Year
+2026-02-18,IPO Application,PRIMARY_INVEST,1000.0,Cleared,2026-02-18,Hello,HBL,False,,2025/2026
+2026-02-18,Load Collateral (Deposit),DEPOSIT,10000.0,Cleared,2026-02-18,a,Load,False,,2025/2026
