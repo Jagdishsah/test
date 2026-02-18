@@ -46,18 +46,53 @@ if not check_password():
 ## --- 2. CUSTOM CSS FOR UI POLISH ---
 st.markdown("""
 <style>
-    /* Metric Cards Styling */
-    div[data-testid="stMetric"] {
-        background-color: #f8f9fa;
-        border: 1px solid #e9ecef;
-        padding: 10px;
-        border-radius: 8px;
+    /* 1. Main Background & Text Defaults */
+    .stApp {
+        /* Optional: You can remove this if you want standard dark mode */
     }
-    /* Alert Box Styling */
-    .risk-alert {background-color: #ffcccb; padding: 15px; border-radius: 8px; color: #8b0000; font-weight: bold; border-left: 5px solid red;}
-    .safe-zone {background-color: #d4edda; padding: 15px; border-radius: 8px; color: #155724; border-left: 5px solid green;}
-    /* Table Styling */
-    .stDataFrame {border: 1px solid #f0f0f0; border-radius: 5px;}
+
+    /* 2. Metric Cards Styling - FIX COLOR ISSUE */
+    div[data-testid="stMetric"] {
+        background-color: #ffffff !important; /* Force white background */
+        border: 1px solid #e0e0e0;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Subtle shadow for 3D effect */
+        color: #333333 !important; /* Force text to be DARK GREY */
+    }
+
+    /* 3. Force specific elements inside the card to be dark */
+    div[data-testid="stMetric"] label {
+        color: #555555 !important; /* Label color (lighter grey) */
+    }
+    div[data-testid="stMetric"] div[data-testid="stMetricValue"] {
+        color: #000000 !important; /* Value color (pure black) */
+    }
+
+    /* 4. Alert Box Styling */
+    .risk-alert {
+        background-color: #ffcccb; 
+        padding: 15px; 
+        border-radius: 8px; 
+        color: #8b0000; 
+        font-weight: bold; 
+        border-left: 5px solid red;
+        margin-bottom: 10px;
+    }
+    .safe-zone {
+        background-color: #d4edda; 
+        padding: 15px; 
+        border-radius: 8px; 
+        color: #155724; 
+        border-left: 5px solid green;
+        margin-bottom: 10px;
+    }
+
+    /* 5. Table Styling */
+    .stDataFrame {
+        border: 1px solid #444; 
+        border-radius: 5px;
+    }
 </style>
 """, unsafe_allow_html=True)
 
