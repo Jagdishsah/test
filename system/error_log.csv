@@ -72,3 +72,30 @@ pandas.errors.EmptyDataError: No columns to parse from file
     raise self.createException(status, responseHeaders, data)
 github.GithubException.UnknownObjectException: 404 {""message"": ""Not Found"", ""documentation_url"": ""https://docs.github.com/rest/repos/contents#get-repository-content"", ""status"": ""404""}
 "
+2026-02-21,06:12:54,get_data: nepse/portfolio.csv,"404 {""message"": ""Not Found"", ""documentation_url"": ""https://docs.github.com/rest/repos/contents#get-repository-content"", ""status"": ""404""}","Traceback (most recent call last):
+  File ""/mount/src/test/core_db.py"", line 29, in get_data
+    file_content = repo.get_contents(filepath)
+  File ""/home/adminuser/venv/lib/python3.13/site-packages/github/Repository.py"", line 2463, in get_contents
+    headers, data = self._requester.requestJsonAndCheck(
+                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+        ""GET"",
+        ^^^^^^
+    ...<2 lines>...
+        follow_302_redirect=True,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File ""/home/adminuser/venv/lib/python3.13/site-packages/github/Requester.py"", line 623, in requestJsonAndCheck
+    return self.__check(
+           ~~~~~~~~~~~~^
+        *self.requestJson(
+        ^^^^^^^^^^^^^^^^^^
+    ...<7 lines>...
+        )
+        ^
+    )
+    ^
+  File ""/home/adminuser/venv/lib/python3.13/site-packages/github/Requester.py"", line 853, in __check
+    raise self.createException(status, responseHeaders, data)
+github.GithubException.UnknownObjectException: 404 {""message"": ""Not Found"", ""documentation_url"": ""https://docs.github.com/rest/repos/contents#get-repository-content"", ""status"": ""404""}
+"
