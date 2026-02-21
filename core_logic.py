@@ -33,8 +33,81 @@ def calculate_trade_metrics(units, cost, ltp, change=0):
     if net_pl > 0: net_pl -= (net_pl * CGT_SHORT)
     return curr_val, net_pl, be_price, day_gain
 
+# --- THE MISSING TRADE ENGINE ---
+def execute_trade_logic(trade_type, symbol, qty, price, remarks=""):
+    port = get_data("nepse/portfolio.csv")
+    hist = get_data("nepse/history.csv")
+    
+    raw_amt = qty * price
+    broker_fee = get_broker_commission(raw_amt)
+    sebon = raw_amt * SEBON_FEE
+    
+    symbol = symbol.upper().strip()
+    now_date = datetime.now().strftime("%Y-%m-%d")
+    
+    if trade_type == "BUY":
+        total_cost = raw_amt + broker_fee + sebon + DP_CHARGE
+        cgt = 0
+        net_amt = total_cost
+        
+        if symbol in port['Symbol'].values:
+            idx = port.index[port['Symbol'] == symbol].tolist()[0]
+            old_qty = port.at[idx, 'Total_Qty']
+            old_inv = port.at[idx, 'Total_Investment']
+            new_qty = old_qty + qty
+            new_inv = old_inv + total_cost
+            port.at[idx, 'Total_Qty'] = new_qty
+            port.at[idx, 'Total_Investment'] = new_inv
+            port.at[idx, 'WACC'] = new_inv / new_qty
+        else:
+            new_row = pd.DataFrame([{
+                "Symbol": symbol, "Total_Qty": qty, 
+                "Total_Investment": total_cost, "WACC": total_cost / qty,
+                "Sector": "Unclassified", "Buy_Date": now_date,
+                "Stop_Loss": 0.0, "Notes": ""
+            }])
+            port = pd.concat([port, new_row], ignore_index=True)
+            
+    elif trade_type == "SELL":
+        gross_recv = raw_amt - broker_fee - sebon - DP_CHARGE
+        cgt = 0
+        net_amt = gross_recv
+        
+        if symbol in port['Symbol'].values:
+            idx = port.index[port['Symbol'] == symbol].tolist()[0]
+            wacc = port.at[idx, 'WACC']
+            cost_basis = wacc * qty
+            profit = gross_recv - cost_basis
+            
+            if profit > 0:
+                cgt = profit * CGT_SHORT  # Defaulting to 7.5% for automation
+                net_amt = gross_recv - cgt
+            
+            old_qty = port.at[idx, 'Total_Qty']
+            if qty >= old_qty:
+                port = port.drop(idx)
+            else:
+                new_qty = old_qty - qty
+                port.at[idx, 'Total_Qty'] = new_qty
+                port.at[idx, 'Total_Investment'] = new_qty * wacc
+                
+    # Update History
+    new_hist = pd.DataFrame([{
+        "Date": now_date, "Symbol": symbol, "Type": trade_type, 
+        "Qty": qty, "Price": price, "Total_Amount": raw_amt, 
+        "Broker_Fee": broker_fee, "Capital_Gain_Tax": cgt, 
+        "Net_Amount": net_amt, "Remarks": remarks
+    }])
+    hist = pd.concat([hist, new_hist], ignore_index=True)
+    
+    # Save & Log
+    save_data("nepse/portfolio.csv", port)
+    save_data("nepse/history.csv", hist)
+    
+    log_amt = -net_amt if trade_type == "BUY" else net_amt
+    log_activity("TRADE", symbol, trade_type, remarks, log_amt)
+
 def refresh_market_cache():
-    """Fetches live API data and updates cache silently."""
     port = get_data("nepse/portfolio.csv")
     watch = get_data("nepse/watchlist.csv")
     symbols = set(port["Symbol"].tolist() + (watch["Symbol"].tolist() if not watch.empty else []))
