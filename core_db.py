@@ -9,7 +9,7 @@ import traceback
 @st.cache_resource
 def get_repo():
     g = Github(st.secrets["github_token"])
-    return g.get_user().get_repo(st.secrets["repo_name"])
+    return g.get_repo(st.secrets["repo_name"]) 
 
 # --- DATA SCHEMAS (Organized by Folder) ---
 SCHEMAS = {
