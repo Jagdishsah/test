@@ -35,18 +35,24 @@ def get_data(filepath):
         return pd.DataFrame(columns=cols)
 
 def save_data(filepath, df):
-    """Saves data to GitHub. Catches errors silently."""
+    """Saves data to GitHub. Prevents infinite loops if error logging fails."""
     try:
         repo = get_repo()
         csv_data = df.to_csv(index=False)
         try:
             contents = repo.get_contents(filepath)
             repo.update_file(contents.path, f"Update {filepath}", csv_data, contents.sha)
-        except:
+        except Exception:
+            # If the file doesn't exist yet, create it
             repo.create_file(filepath, f"Create {filepath}", csv_data)
+            
     except Exception as e:
-        log_error(f"save_data: {filepath}", str(e))
-        st.toast(f"⚠️ Failed to save {filepath} to cloud. Check Error Logs.")
+        # 1. STOP THE INFINITE LOOP
+        if filepath != "system/error_log.csv":
+            log_error(f"save_data: {filepath}", str(e))
+            
+        # 2. SHOW THE REAL ERROR ON SCREEN
+        st.error(f"🚨 GitHub Blocked Save for {filepath}: {str(e)}")
 
 def log_activity(category, symbol, action, details, amount):
     try:
