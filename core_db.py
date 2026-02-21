@@ -22,7 +22,7 @@ SCHEMAS = {
 }
 
 def get_data(filepath):
-    """Fetches data from GitHub. If it fails or doesn't exist, returns empty DataFrame with correct schema."""
+    """Fetches data from GitHub. If it fails, returns empty DataFrame with correct schema."""
     try:
         repo = get_repo()
         file_content = repo.get_contents(filepath)
@@ -30,7 +30,9 @@ def get_data(filepath):
         df = pd.read_csv(StringIO(csv_data))
         return df
     except Exception as e:
-        log_error(f"get_data: {filepath}", str(e))
+        # STOP LOOP: Only log if it's NOT the error log itself
+        if filepath != "system/error_log.csv":
+            log_error(f"get_data: {filepath}", str(e))
         cols = SCHEMAS.get(filepath, [])
         return pd.DataFrame(columns=cols)
 
@@ -47,11 +49,9 @@ def save_data(filepath, df):
             repo.create_file(filepath, f"Create {filepath}", csv_data)
             
     except Exception as e:
-        # 1. STOP THE INFINITE LOOP
+        # STOP LOOP: Only log if it's NOT the error log itself
         if filepath != "system/error_log.csv":
             log_error(f"save_data: {filepath}", str(e))
-            
-        # 2. SHOW THE REAL ERROR ON SCREEN
         st.error(f"🚨 GitHub Blocked Save for {filepath}: {str(e)}")
 
 def log_activity(category, symbol, action, details, amount):
@@ -78,6 +78,13 @@ def log_error(context, error_msg):
             "Context": context, "Error_Message": error_msg, "Traceback": traceback.format_exc()
         }])
         df = pd.concat([df, new_entry], ignore_index=True)
-        save_data("system/error_log.csv", df)
-    except:
-        pass # If error logging itself fails, we must pass to avoid infinite loops
+        # Use a localized save to prevent infinite loops back to main save_data
+        repo = get_repo()
+        csv_data = df.to_csv(index=False)
+        try:
+            contents = repo.get_contents("system/error_log.csv")
+            repo.update_file(contents.path, "Logged Error", csv_data, contents.sha)
+        except:
+            repo.create_file("system/error_log.csv", "Created Error Log", csv_data)
+    except Exception as e:
+        st.sidebar.error(f"Critical Logging Failure: {str(e)}")
