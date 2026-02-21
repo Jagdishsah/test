@@ -8,8 +8,9 @@ import traceback
 # --- GITHUB SETUP ---
 @st.cache_resource
 def get_repo():
+    # Token stays in secrets for security, but repo is hardcoded
     g = Github(st.secrets["github_token"])
-    return g.get_repo(st.secrets["repo_name"]) 
+    return g.get_repo("Jagdishsah/test")
 
 # --- DATA SCHEMAS (Organized by Folder) ---
 SCHEMAS = {
