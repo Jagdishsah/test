@@ -26,3 +26,22 @@ Date,Time,Context,Error_Message,Traceback
     raise self.createException(status, responseHeaders, data)
 github.GithubException.UnknownObjectException: 404 {""message"": ""Not Found"", ""documentation_url"": ""https://docs.github.com/rest/repos/contents#get-repository-content"", ""status"": ""404""}
 "
+2026-02-21,06:12:48,get_data: nepse/history.csv,No columns to parse from file,"Traceback (most recent call last):
+  File ""/mount/src/test/core_db.py"", line 31, in get_data
+    df = pd.read_csv(StringIO(csv_data))
+  File ""/home/adminuser/venv/lib/python3.13/site-packages/pandas/io/parsers/readers.py"", line 1026, in read_csv
+    return _read(filepath_or_buffer, kwds)
+  File ""/home/adminuser/venv/lib/python3.13/site-packages/pandas/io/parsers/readers.py"", line 620, in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+  File ""/home/adminuser/venv/lib/python3.13/site-packages/pandas/io/parsers/readers.py"", line 1620, in __init__
+    self._engine = self._make_engine(f, self.engine)
+                   ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File ""/home/adminuser/venv/lib/python3.13/site-packages/pandas/io/parsers/readers.py"", line 1898, in _make_engine
+    return mapping[engine](f, **self.options)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File ""/home/adminuser/venv/lib/python3.13/site-packages/pandas/io/parsers/c_parser_wrapper.py"", line 93, in __init__
+    self._reader = parsers.TextReader(src, **kwds)
+                   ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File ""pandas/_libs/parsers.pyx"", line 581, in pandas._libs.parsers.TextReader.__cinit__
+pandas.errors.EmptyDataError: No columns to parse from file
+"
